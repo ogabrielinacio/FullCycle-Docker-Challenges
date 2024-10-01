@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      - API_HOST=node-app 
+      - API_PORT=3000
+    volumes:
+      - ./Nginx/default.conf:/etc/nginx/conf.d/default.conf
+    command: /bin/bash -c "envsubst < /etc/nginx/conf.d/default.conf > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"
+    depends_on:
+      - node-app
+
+  node-app:
+    image: ogabrielinacio/fullcycle-nginx-node
+    container_name: node-app
+    environment:
+      - MYSQL_HOST=mysql 
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=Qwert@123
+      - MYSQL_DATABASE=testdb
+    volumes:
+      - ./Node-app:/usr/src/app
+    depends_on:
+      - mysql
+    ports:
+      - "3000:3000"
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      MYSQL_DATABASE: testdb
+      MYSQL_ROOT_PASSWORD: Qwert@123
+    volumes:
+      - ./DBData:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+networks:
+  default:
+    driver: bridge
+
