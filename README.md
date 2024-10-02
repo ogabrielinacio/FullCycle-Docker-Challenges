@@ -41,5 +41,5 @@ This project is part of the Full Cycle course challenge. The objective is to cre
    - Run the following command to execute the Go application:
 
     ```bash
-     docker run <your-user>/fullcycle
+     docker run ogabrielinacio/fullcycle
     ```
